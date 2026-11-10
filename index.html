@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoderPrompt AI - Medical Coding Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 font-sans h-screen flex flex-col">
+
+    <header class="bg-teal-700 text-white shadow-md px-6 py-4 flex justify-between items-center shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="p-2 bg-teal-600 rounded-lg shadow-inner">
+                <i class="fa-solid fa-user-gear text-xl text-teal-100"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-wide">CoderPrompt AI</h1>
+                <p class="text-xs text-teal-100/80">Prompt Engineering Expert for Medical Coders</p>
+            </div>
+        </div>
+        <div class="bg-teal-850 text-teal-200 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2 border border-teal-600">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Gemini 3.5 Flash Connected
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        
+        <aside class="w-80 bg-white border-r border-slate-200 p-5 hidden md:flex flex-col justify-between shrink-0">
+            <div>
+                <div class="flex items-center gap-2 mb-4 text-slate-400">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                    <h3 class="text-xs font-bold uppercase tracking-wider">Quick Action Templates</h3>
+                </div>
+                
+                <div class="space-y-3">
+                    <button onclick="fillPrompt('What is the exact ICD-10-CM code for Stage 3 Chronic Kidney Disease?')" 
+                            class="w-full text-left p-3 text-sm bg-slate-50 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 rounded-xl transition-all duration-200 group">
+                        <div class="font-semibold text-slate-700 group-hover:text-teal-700 flex items-center mb-1">
+                            <i class="fa-solid fa-stethoscope text-teal-600 mr-2"></i> Diagnosis to Code
+                        </div>
+                        <p class="text-xs text-slate-500 line-clamp-1">Find appropriate code configurations mapping to clinical terms.</p>
+                    </button>
+
+                    <button onclick="fillPrompt('What clinical diagnosis framework does the code Z71.3 represent? Check for any documentation requirements.')" 
+                            class="w-full text-left p-3 text-sm bg-slate-50 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 rounded-xl transition-all duration-200 group">
+                        <div class="font-semibold text-slate-700 group-hover:text-teal-700 flex items-center mb-1">
+                            <i class="fa-solid fa-file-medical text-teal-600 mr-2"></i> Code Reverse Lookup
+                        </div>
+                        <p class="text-xs text-slate-500 line-clamp-1">Extract full definitions and breakdown variables from code units.</p>
+                    </button>
+
+                    <button onclick="fillPrompt('How should I code a laparoscopic cholecystectomy that converted to an open procedure? Give me optimized prompt logic to query this.')" 
+                            class="w-full text-left p-3 text-sm bg-slate-50 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 rounded-xl transition-all duration-200 group">
+                        <div class="font-semibold text-slate-700 group-hover:text-teal-700 flex items-center mb-1">
+                            <i class="fa-solid fa-bolt text-teal-600 mr-2"></i> Prompt Engineering Advice
+                        </div>
+                        <p class="text-xs text-slate-500 line-clamp-1">Ask how to structure documentation queries cleanly.</p>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/60 text-xs text-slate-600 space-y-2">
+                <div class="font-semibold text-slate-800 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-teal-600"></i>
+                    <span>System Parameters</span>
+                </div>
+                <p class="leading-relaxed">The AI balances accurate clinical code taxonomy matching with automated prompt optimization guidelines.</p>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col bg-slate-100">
+            
+            <div id="chat-window" class="flex-1 overflow-y-auto p-6 space-y-6">
+                
+                <div class="flex items-start gap-3 max-w-3xl">
+                    <div class="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm shrink-0">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-sm border border-slate-200 text-slate-800">
+                        <p class="text-xs font-bold text-teal-700 uppercase tracking-wide mb-1">Prompt Engineer Bot</p>
+                        <div class="text-sm leading-relaxed space-y-2">
+                            <p>Greetings. I am your specialized prompt engineer pipeline targeting complex medical billing architectures (ICD-10-CM, CPT, HCPCS).</p>
+                            <p>Give me standard phrases or clinical outcomes to extract codes, or send structural code tags to pull absolute medical parameters. I will also format optimized prompt structures to fix missing items.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="p-4 bg-white border-t border-slate-200 shrink-0">
+                <form id="chat-form" class="max-w-4xl mx-auto flex items-center gap-3">
+                    <div class="relative flex-1">
+                        <input type="text" id="user-input" autocomplete="off" required
+                               placeholder="Type diagnosis names, clinical variables, or specific codes (e.g., E11.9)..." 
+                               class="w-full bg-slate-50 text-slate-800 placeholder-slate-400 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent pl-4 pr-10 py-3.5 transition-all duration-200">
+                        <button type="button" onclick="document.getElementById('user-input').value=''" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition">
+                            <i class="fa-solid fa-circle-xmark"></i>
+                        </button>
+                    </div>
+                    <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl px-6 py-3.5 text-sm transition-all shadow-sm flex items-center gap-2 shrink-0">
+                        <span>Send Message</span>
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        // Shortcut template tool helper
+        function fillPrompt(text) {
+            userInput.value = text;
+            userInput.focus();
+        }
+
+        // DOM dynamic node builder string wrapper function
+        function appendMessage(role, text) {
+            const wrapper = document.createElement('div');
+            // Right justify message layouts if user speaks
+            wrapper.className = `flex items-start gap-3 max-w-3xl animate-fade-in ${role === 'user' ? 'ml-auto flex-row-reverse' : ''}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = `w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0 shadow-sm ${role === 'user' ? 'bg-slate-700' : 'bg-teal-600'}`;
+            avatar.innerHTML = role === 'user' ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
+
+            const messageBox = document.createElement('div');
+            messageBox.className = `p-4 rounded-2xl shadow-sm border text-sm leading-relaxed ${
+                role === 'user' 
+                ? 'bg-slate-800 border-slate-800 text-slate-100 rounded-tr-none' 
+                : 'bg-white border-slate-200 text-slate-800 rounded-tl-none'
+            }`;
+
+            const headerName = document.createElement('p');
+            headerName.className = `text-[10px] font-bold uppercase tracking-wider mb-1 ${role === 'user' ? 'text-slate-400 text-right' : 'text-teal-700'}`;
+            headerName.innerText = role === 'user' ? 'Medical Coder' : 'Prompt Engineer Bot';
+
+            const contentBody = document.createElement('div');
+            // "whitespace-pre-wrap" honors layout structures and linebreaks generated by the AI model text engine
+            contentBody.className = "whitespace-pre-wrap break-words";
+            contentBody.innerText = text;
+
+            messageBox.appendChild(headerName);
+            messageBox.appendChild(contentBody);
+            wrapper.appendChild(avatar);
+            wrapper.appendChild(messageBox);
+            chatWindow.appendChild(wrapper);
+            
+            // Auto scroll structural element layout height offsets down to latest turn
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // Form pipeline controller submissions event handling
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const textValue = userInput.value.trim();
+            if (!textValue) return;
+
+            // Render native UI updates
+            appendMessage('user', textValue);
+            userInput.value = '';
+
+            // Inject temporary interactive waiting state elements
+            const loadingUID = document.createElement('div');
+            loadingUID.className = "flex items-start gap-3 max-w-3xl";
+            loadingUID.innerHTML = `
+                <div class="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shrink-0 shadow-sm"><i class="fa-solid fa-spinner animate-spin text-xs"></i></div>
+                <div class="bg-white border border-slate-200 text-slate-400 italic rounded-2xl rounded-tl-none p-4 text-sm shadow-sm flex items-center gap-2">
+                    <span>Analyzing terminology structures...</span>
+                </div>
+            `;
+            chatWindow.appendChild(loadingUID);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            try {
+                // Post text payload payloads into the local Python Flask engine backend route controller
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: textValue })
+                });
+                
+                const payloadData = await response.json();
+                
+                // Clear the animated state indicator element safely
+                loadingUID.remove();
+
+                if (payloadData.reply) {
+                    appendMessage('bot', payloadData.reply);
+                } else {
+                    appendMessage('bot', "System Error Notice: " + (payloadData.error || "An unexpected error occurred."));
+                }
+
+            } catch (err) {
+                loadingUID.remove();
+                appendMessage('bot', "Network Mapping Error. Please verify that your local Flask development server is running.");
+                console.error("Transmission error tracking details:", err);
+            }
+        });
+    </script>
+</body>
+</html>
